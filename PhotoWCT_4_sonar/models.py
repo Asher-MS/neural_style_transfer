@@ -7,6 +7,7 @@ import numpy as np
 from PIL import Image
 import torch
 import torch.nn as nn
+import random
 # from models import VGGEncoder, VGGDecoder
 
 #####################################################3
@@ -324,6 +325,7 @@ class VGGDecoder(nn.Module):
 ##################################################
 
 class Sonar_noise_WCT(nn.Module):
+    temp_no=0
     def __init__(self):
         super(Sonar_noise_WCT, self).__init__()
         self.e1 = VGGEncoder(1)
@@ -434,6 +436,10 @@ class Sonar_noise_WCT(nn.Module):
         return ccsF
     
     def __wct_core(self, cont_feat, styl_feat):
+        
+        
+
+
         cFSize = cont_feat.size()
         c_mean = torch.mean(cont_feat, 1)  # c x (h x w)
         c_mean = c_mean.unsqueeze(1).expand_as(cont_feat)
@@ -450,12 +456,27 @@ class Sonar_noise_WCT(nn.Module):
         # c_e = c_e2[:,0]
         
         k_c = cFSize[0]
+        
         for i in range(cFSize[0] - 1, -1, -1):
             if c_e[i] >= 0.00001:
                 k_c = i + 1
                 break
         
         sFSize = styl_feat.size()
+
+        # Applying random weights to the feature map
+        
+        style_weights = torch.rand(sFSize[0])
+        
+        style_weights=0.5+0.5*style_weights
+        # style_weights = style_weights / torch.sum(style_weights)
+        # print(style_weights)
+        if self.is_cuda:
+            styl_feat = styl_feat.cuda()
+            style_weights = style_weights.cuda()
+        styl_feat = styl_feat * style_weights.unsqueeze(1)   
+
+
         s_mean = torch.mean(styl_feat, 1)
         styl_feat = styl_feat - s_mean.unsqueeze(1).expand_as(styl_feat)
         styleConv = torch.mm(styl_feat, styl_feat.t()).div(sFSize[1] - 1)
