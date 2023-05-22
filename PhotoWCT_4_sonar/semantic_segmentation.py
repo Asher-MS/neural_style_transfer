@@ -2,7 +2,8 @@ from PIL import Image
 import requests
 from rembg import remove
 import sys
-def paste_foreground_on_background(foreground_image, background_path, output_path):
+    
+def paste_foreground_on_background(foreground_image, background_path, output_path=None):
     
     foreground_image = Image.open(foreground_image)
 
@@ -26,10 +27,9 @@ def paste_foreground_on_background(foreground_image, background_path, output_pat
         background_image.paste(foreground_image, (0, 0),mask=alpha_mask)
 
         
-        background_image.save(output_path)
+        if output_path:
+            background_image.save(output_path)
+        else:
+            return background_image
 
-foreground_image = sys.argv[1]
-background_path = sys.argv[2]
-output_path = "output.jpg"
 
-paste_foreground_on_background(foreground_image, background_path, output_path)
