@@ -4,9 +4,9 @@ import sys
 
 
 content_dir="./data/content/"
-style_image="./data/plane/plane-010.png"
+style_image="./data/plane/plane-024.png"
 output_dir="./data/output/"
-background_image="./data/seafloor/floor-10.png"
+background_image="./data/seafloor/floor-18.png"
 
 temp=0
 for i in os.listdir(content_dir):
