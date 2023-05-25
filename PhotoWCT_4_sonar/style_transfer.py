@@ -15,7 +15,7 @@ import sys
 
 
 output_image_path = './data/output/'
-def transfer_style(content_image_path,style_image_path,background_image,output_name):
+def transfer_style(content_image,style_image,save_image=True,change_background=True,background_image=None,output_name=None):
     # Load model
     model_name = './PhotoWCTModels/photo_wct.pth'
 
@@ -25,7 +25,13 @@ def transfer_style(content_image_path,style_image_path,background_image,output_n
     sn_wct.cuda()
 
 
-    cont_img = paste_foreground_on_background(content_image_path,background_image).convert('RGB')
+    if change_background:
+        cont_img = paste_foreground_on_background(content_image,background_image).convert('RGB')
+    else:
+        if isinstance(content_image,Image.Image):
+            cont_img=content_image
+        else:
+            cont_img=Image.open(content_image).convert('RGB')
     cont_img = cont_img.resize((256, 256))
     cont_img = transforms.ToTensor()(cont_img).unsqueeze(0)
     cont_img = cont_img.cuda()
@@ -33,7 +39,10 @@ def transfer_style(content_image_path,style_image_path,background_image,output_n
 
 
 
-    styl_img = Image.open(style_image_path).convert('RGB')
+    if isinstance(style_image,Image.Image):
+        styl_img=style_image
+    else:
+        styl_img=Image.open(style_image).convert('RGB')
     styl_img = transforms.ToTensor()(styl_img).unsqueeze(0)
     styl_img = styl_img.cuda()
 
@@ -45,7 +54,10 @@ def transfer_style(content_image_path,style_image_path,background_image,output_n
 
         #### save img
 
-        out_img.save(output_name)
+        if save_image:
+            out_img.save(output_name)
+
+    return out_img
         
 
 
