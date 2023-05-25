@@ -3,9 +3,9 @@ from style_transfer import transfer_style
 import sys
 
 
-content_dir="./data/plane_op/"
+content_dir="./data/ship_op/"
 style_image="./data/plane/plane-001.png"
-output_dir="./data/output/planes/"
+output_dir="./data/output/ships/"
 background_image="./data/seafloor/floor-31.png"
 
 temp=0
