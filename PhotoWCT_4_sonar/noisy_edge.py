@@ -1,7 +1,7 @@
 
 import cv2
 import numpy as np
-
+from PIL import Image
 
 def add_scale_noise(image, scale_factor, noise_intensity):
 
@@ -30,21 +30,5 @@ def add_scale_noise(image, scale_factor, noise_intensity):
             image[:, :, channel] * (1 - noisy_mask)).astype(np.uint8)
 
     # cv2.imwrite(content_image_path+'_noise.jpg', noisy_image)
+    noisy_image=Image.fromarray(noisy_image)
     return noisy_image
-
-
-# # Load the image
-# image = cv2.imread('./output.jpg')
-
-# if image is None:
-#     print(f"Failed to load image at path: {image_path}")
-# else:
-#     # Add scale noise to the edges
-#     scale_factor = 30  # Adjust the scale factor as desired
-#     noise_intensity = 1  # Adjust the noise intensity as desired
-#     noisy_image = add_scale_noise(image, scale_factor, noise_intensity)
-
-# # Display the noisy image
-# output_path = './data/output/out.jpg'
-# cv2.imwrite(output_path, noisy_image)
-# print(f"Noisy image saved at path: {output_path}")

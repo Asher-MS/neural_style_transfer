@@ -15,7 +15,7 @@ import sys
 
 
 output_image_path = './data/output/'
-def transfer_style(content_image,style_image,save_image=True,change_background=True,background_image=None,output_name=None,rotate_angle=0):
+def transfer_style(content_image,style_image,save_image=True,change_background=True,background_image=None,output_name=None,rotate_angle=0,add_noise=False):
     # Load model
     model_name = './PhotoWCTModels/photo_wct.pth'
 
@@ -26,7 +26,7 @@ def transfer_style(content_image,style_image,save_image=True,change_background=T
 
 
     if change_background:
-        cont_img = paste_foreground_on_background(content_image,background_image,rotate_angle=rotate_angle).convert('RGB')
+        cont_img = paste_foreground_on_background(content_image,background_image,rotate_angle=rotate_angle,add_noise=add_noise).convert('RGB')
     else:
         if isinstance(content_image,Image.Image):
             cont_img=content_image

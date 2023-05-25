@@ -8,7 +8,7 @@ from noisy_edge import add_scale_noise
 import sys
 
     
-def paste_foreground_on_background(foreground_image, background_path, output_path=None,rotate_angle=0):
+def paste_foreground_on_background(foreground_image, background_path, output_path=None,rotate_angle=0,add_noise=False):
     
     foreground_image = Image.open(foreground_image)
 
@@ -28,8 +28,9 @@ def paste_foreground_on_background(foreground_image, background_path, output_pat
             foreground_image = foreground_image.convert(background_image.mode)
         
         alpha_mask=alpha_mask.resize(background_image.size,Image.ANTIALIAS)
-        foreground_image=add_scale_noise(image=foreground_image,scale_factor=30,noise_intensity=1)
-        alpha_mask=add_scale_noise(image=alpha_mask,scale_factor=30,noise_intensity=1)
+        if add_noise:
+                foreground_image=add_scale_noise(image=foreground_image.convert("RGBA"),scale_factor=30,noise_intensity=1)
+                alpha_mask=add_scale_noise(image=alpha_mask.convert("RGBA"),scale_factor=30,noise_intensity=1)
 
 
         foreground_image=foreground_image.rotate(rotate_angle,resample=0,expand=0)

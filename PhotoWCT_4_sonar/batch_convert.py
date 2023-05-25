@@ -10,8 +10,8 @@ background_image="./data/seafloor/floor-31.png"
 
 temp=0
 for i in os.listdir(content_dir):
-    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp)+".jpg",rotate_angle=0)
-    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp+1)+".jpg",rotate_angle=90)
-    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp+2)+".jpg",rotate_angle=180)
-    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp+3)+".jpg",rotate_angle=270)
+    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp)+".jpg",rotate_angle=0,add_noise=True)
+    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp+1)+".jpg",rotate_angle=90,add_noise=True)
+    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp+2)+".jpg",rotate_angle=180,add_noise=True)
+    transfer_style(content_image=content_dir+i,style_image=style_image,background_image=background_image,output_name=output_dir+str(temp+3)+".jpg",rotate_angle=270,add_noise=True)
     temp=temp+4
