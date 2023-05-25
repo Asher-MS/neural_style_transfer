@@ -4,10 +4,11 @@ import requests
 from rembg import remove
 import rembg
 import numpy as np
-
+from noisy_edge import add_scale_noise
 import sys
+
     
-def paste_foreground_on_background(foreground_image, background_path, output_path=None):
+def paste_foreground_on_background(foreground_image, background_path, output_path=None,rotate_angle=0):
     
     foreground_image = Image.open(foreground_image)
 
@@ -27,7 +28,12 @@ def paste_foreground_on_background(foreground_image, background_path, output_pat
             foreground_image = foreground_image.convert(background_image.mode)
         
         alpha_mask=alpha_mask.resize(background_image.size,Image.ANTIALIAS)
+        foreground_image=add_scale_noise(image=foreground_image,scale_factor=30,noise_intensity=1)
+        alpha_mask=add_scale_noise(image=alpha_mask,scale_factor=30,noise_intensity=1)
 
+
+        foreground_image=foreground_image.rotate(rotate_angle,resample=0,expand=0)
+        alpha_mask=alpha_mask.rotate(rotate_angle,resample=0,expand=0)
         background_image.paste(foreground_image, (0, 0),mask=alpha_mask)
 
         
@@ -35,6 +41,11 @@ def paste_foreground_on_background(foreground_image, background_path, output_pat
             background_image.save(output_path)
         else:
             return background_image
+
+
+
+
+
 
 
 
