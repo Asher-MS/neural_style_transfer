@@ -1,5 +1,5 @@
 from io import BytesIO
-from PIL import Image
+from PIL import Image,ImageEnhance
 import requests
 from rembg import remove
 import rembg
@@ -35,13 +35,18 @@ def paste_foreground_on_background(foreground_image, background_path, output_pat
 
         foreground_image=foreground_image.rotate(rotate_angle,resample=0,expand=0)
         alpha_mask=alpha_mask.rotate(rotate_angle,resample=0,expand=0)
+
+        img_enhancer = ImageEnhance.Brightness(foreground_image)
+
+        factor = 1
+        foreground_image = img_enhancer.enhance(factor)
         background_image.paste(foreground_image, (0, 0),mask=alpha_mask)
 
         
         if output_path:
             background_image.save(output_path)
         else:
-            return background_image
+            return background_image,alpha_mask
 
 
 

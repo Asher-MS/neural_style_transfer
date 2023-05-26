@@ -26,7 +26,8 @@ def transfer_style(content_image,style_image,save_image=True,change_background=T
 
 
     if change_background:
-        cont_img = paste_foreground_on_background(content_image,background_image,rotate_angle=rotate_angle,add_noise=add_noise).convert('RGB')
+        cont_img,alpha_mask = paste_foreground_on_background(content_image,background_image,rotate_angle=rotate_angle,add_noise=add_noise)
+        cont_img=cont_img.convert('RGB')
     else:
         if isinstance(content_image,Image.Image):
             cont_img=content_image
@@ -37,7 +38,7 @@ def transfer_style(content_image,style_image,save_image=True,change_background=T
     cont_img = cont_img.cuda()
 
 
-
+    background_image=Image.open(background_image)
 
     if isinstance(style_image,Image.Image):
         styl_img=style_image
@@ -52,7 +53,10 @@ def transfer_style(content_image,style_image,save_image=True,change_background=T
         ndarr = grid.mul(255).clamp(0, 255).byte().permute(1, 2, 0).cpu().numpy()
         out_img = Image.fromarray(ndarr)
 
-
+        alpha_mask=alpha_mask.convert("RGBA")
+        out_img=out_img.resize(background_image.size,Image.ANTIALIAS)
+        background_image.paste(out_img,(0,0),mask=alpha_mask)
+        out_img=background_image
         #### save img
     
         if save_image:

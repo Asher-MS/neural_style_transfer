@@ -21,7 +21,7 @@ vgg19 = models.vgg19(weights=models.VGG19_Weights.DEFAULT)
 
 
 for param in vgg19.parameters():
-    param.requires_grad = False
+    param.requires_grad = True
 
 
 num_classes = 2  
@@ -48,7 +48,7 @@ train_dataset = datasets.ImageFolder(root=data_root+'train',transform=transform)
 val_dataset = datasets.ImageFolder(root=data_root+'val',transform=transform)
 
 
-batch_size = 32
+batch_size = 16
 
 train_loader = torch.utils.data.DataLoader(train_dataset,batch_size=batch_size,shuffle=True,num_workers=0)
 
@@ -59,8 +59,9 @@ val_loader = torch.utils.data.DataLoader(val_dataset,batch_size=batch_size,shuff
 # print(train_dataset.targets)
 
 # Training loop
-num_epochs = 10
+num_epochs = 20
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Training on {}".format(device))
 vgg19 = vgg19.to(device)
 
 if do_training:
