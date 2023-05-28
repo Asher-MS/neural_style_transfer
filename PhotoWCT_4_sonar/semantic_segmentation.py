@@ -1,5 +1,5 @@
 from io import BytesIO
-from PIL import Image,ImageEnhance
+from PIL import Image,ImageEnhance,ImageDraw,ImageFilter
 import requests
 from rembg import remove
 import rembg
@@ -35,6 +35,9 @@ def paste_foreground_on_background(foreground_image, background_path, output_pat
 
         foreground_image=foreground_image.rotate(rotate_angle,resample=0,expand=0)
         alpha_mask=alpha_mask.rotate(rotate_angle,resample=0,expand=0)
+        shadow_added=add_shadow(foreground_image,alpha_mask,(0,0,0,127),127,10)
+        shadow_added.show()
+        foreground_image=shadow_added
 
         img_enhancer = ImageEnhance.Brightness(foreground_image)
 
@@ -49,7 +52,30 @@ def paste_foreground_on_background(foreground_image, background_path, output_pat
             return background_image,alpha_mask
 
 
+def add_shadow(image, alpha_mask, shadow_color, shadow_opacity, blur_radius):
 
+    # Open the image and alpha mask
+
+    # Create a shadow image with the same size as the input image
+    shadow = Image.new("RGBA", image.size)
+
+    # Apply a Gaussian blur to the alpha mask
+    alpha_mask_blur = alpha_mask.filter(ImageFilter.GaussianBlur(blur_radius))
+
+    # Calculate the shadow offset based on the image size
+    shadow_offset = (int(image.size[0] * 0.1), int(image.size[1] * 0.1))
+
+    # Draw the shadow using the blurred alpha mask and shadow color
+    shadow_draw = ImageDraw.Draw(shadow)
+    shadow_draw.bitmap(shadow_offset, alpha_mask_blur, fill=shadow_color)
+
+    # Adjust the opacity of the shadow image
+    shadow = shadow.point(lambda p: p + shadow_opacity)
+    image=image.convert('RGBA')
+    # Composite the original image with the shadow using the alpha mask
+    result = Image.alpha_composite(image, shadow)
+
+    return result
 
 
 
